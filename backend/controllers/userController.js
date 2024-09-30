@@ -5,9 +5,7 @@ import { v2 as cloudinary } from "cloudinary";
 import { generateToken } from "../utils/jwtToken.js";
 
 export const register = catchAsyncErrors(async (req, res, next) => {
-  if (!req.files || Object.keys(req.files).length === 0) {
-    return next(new ErrorHandler("Profile Image Required.", 400));
-  }
+ 
 
   const { profileImage } = req.files;
 
@@ -23,31 +21,12 @@ export const register = catchAsyncErrors(async (req, res, next) => {
     phone,
     address,
     role,
-    bankAccountNumber,
-    bankAccountName,
-    bankName,
-    easypaisaAccountNumber,
-    paypalEmail,
   } = req.body;
 
   if (!userName || !email || !phone || !password || !address || !role) {
     return next(new ErrorHandler("Please fill full form.", 400));
   }
-  if (role === "Auctioneer") {
-    if (!bankAccountName || !bankAccountNumber || !bankName) {
-      return next(
-        new ErrorHandler("Please provide your full bank details.", 400)
-      );
-    }
-    if (!easypaisaAccountNumber) {
-      return next(
-        new ErrorHandler("Please provide your easypaisa account number.", 400)
-      );
-    }
-    if (!paypalEmail) {
-      return next(new ErrorHandler("Please provide your paypal email.", 400));
-    }
-  }
+
   const isRegistered = await User.findOne({ email });
   if (isRegistered) {
     return next(new ErrorHandler("User already registered.", 400));
@@ -78,19 +57,7 @@ export const register = catchAsyncErrors(async (req, res, next) => {
       public_id: cloudinaryResponse.public_id,
       url: cloudinaryResponse.secure_url,
     },
-    paymentMethods: {
-      bankTransfer: {
-        bankAccountNumber,
-        bankAccountName,
-        bankName,
-      },
-      easypaisa: {
-        easypaisaAccountNumber,
-      },
-      paypal: {
-        paypalEmail,
-      },
-    },
+   
   });
   generateToken(user, "User Registered.", 201, res);
 });

@@ -17,8 +17,8 @@ const userSchema = new mongoose.Schema({
   address: String,
   phone: {
     type: String,
-    minLength: [11, "Phone Number must caontain exact 11 digits."],
-    maxLength: [11, "Phone Number must caontain exact 11 digits."],
+    minLength: [10, "Phone Number must caontain exact 11 digits."],
+    maxLength: [10, "Phone Number must caontain exact 11 digits."],
   },
   profileImage: {
     public_id: {
@@ -30,19 +30,7 @@ const userSchema = new mongoose.Schema({
       required: true,
     },
   },
-  paymentMethods: {
-    bankTransfer: {
-      bankAccountNumber: String,
-      bankAccountName: String,
-      bankName: String,
-    },
-    easypaisa: {
-      easypaisaAccountNumber: Number,
-    },
-    paypal: {
-      paypalEmail: String,
-    },
-  },
+  
   role: {
     type: String,
     enum: ["Auctioneer", "Bidder", "Super Admin"],
